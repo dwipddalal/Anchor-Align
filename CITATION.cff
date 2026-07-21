@@ -1,0 +1,87 @@
+cff-version: 1.2.0
+message: "If you use this software or the Anchor-Align method, please cite the paper below."
+title: "Anchor-Align: Generalizable VLA Finetuning via Representation Anchoring and Language-Action Alignment"
+abstract: >-
+  Anchor-Align is a finetuning method for vision-language-action (VLA) models that
+  prevents behavior cloning from overwriting the pretrained vision-language
+  representations supporting visual and semantic generalization. It augments BC with
+  Vision-Language Anchoring, which distills layer-wise representations from a frozen
+  VLM copy, and Language-Action Alignment, which converts each action target into a
+  discrete motion-direction label and jointly trains language and action prediction on
+  the same robot observation.
+type: software
+license: MIT
+repository-code: "https://github.com/dwipddalal/Anchor-Align"
+url: "https://anchoralignvla.github.io/"
+keywords:
+  - vision-language-action model
+  - VLA
+  - VLA generalization
+  - robot manipulation
+  - behavior cloning
+  - catastrophic forgetting
+  - robot learning
+  - LIBERO
+  - CALVIN
+authors:
+  - family-names: Dalal
+    given-names: Dwip
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Patel
+    given-names: Shivansh
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Jain
+    given-names: Chahit
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Kim
+    given-names: Jeonghwan
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Mishra
+    given-names: Utkarsh
+    affiliation: Texas A&M University
+  - family-names: Baratian
+    given-names: Alex
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Ha
+    given-names: Hyeonjeong
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Ji
+    given-names: Heng
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Lazebnik
+    given-names: Svetlana
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Jain
+    given-names: Unnat
+    affiliation: University of California, Irvine
+preferred-citation:
+  type: article
+  title: "Generalizable VLA Finetuning via Representation Anchoring and Language-Action Alignment"
+  year: 2026
+  journal: "arXiv preprint arXiv:2607.13429"
+  url: "https://arxiv.org/abs/2607.13429"
+  identifiers:
+    - type: other
+      value: "arXiv:2607.13429"
+      description: arXiv preprint identifier
+  authors:
+    - family-names: Dalal
+      given-names: Dwip
+    - family-names: Patel
+      given-names: Shivansh
+    - family-names: Jain
+      given-names: Chahit
+    - family-names: Kim
+      given-names: Jeonghwan
+    - family-names: Mishra
+      given-names: Utkarsh
+    - family-names: Baratian
+      given-names: Alex
+    - family-names: Ha
+      given-names: Hyeonjeong
+    - family-names: Ji
+      given-names: Heng
+    - family-names: Lazebnik
+      given-names: Svetlana
+    - family-names: Jain
+      given-names: Unnat
