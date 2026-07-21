@@ -1,0 +1,564 @@
+{
+  "_meta": {
+    "campaign": "VLA-Adapter 3-seed multi-seed eval",
+    "created": "2026-05-08",
+    "seeds": [
+      7,
+      21,
+      42
+    ],
+    "eval_config": {
+      "spatial_std": {
+        "num_parallel_envs": 50,
+        "num_trials_per_task": 50,
+        "use_seed_in_env": true
+      },
+      "libero_pro": {
+        "num_parallel_envs": 50,
+        "use_seed_in_env": true,
+        "perturbations": [
+          "lan",
+          "object",
+          "swap"
+        ]
+      },
+      "libero_plus": {
+        "batch_size": 48,
+        "num_shards": 4,
+        "shard_ranges": [
+          [
+            0,
+            600
+          ],
+          [
+            600,
+            1200
+          ],
+          [
+            1200,
+            1800
+          ],
+          [
+            1800,
+            2402
+          ]
+        ]
+      }
+    },
+    "notes": [
+      "All evals use --use_seed_in_env=True (cfg.seed mixed into env_seed) per the if-else wrap added 2026-05-07.",
+      "For Plus: env_seed = cfg.seed + task_id (eval script's native logic).",
+      "For std/PRO: env_seed = cfg.seed * 100000 + task_id * 1000 + ep_idx (when use_seed_in_env=True).",
+      "Eval scripts: experiments/robot/libero/run_libero_eval_batched.py, experiments/robot/libero_pro/run_libero_pro_eval.py, experiments/robot/libero_plus/run_libero_plus_eval_batched.py",
+      "Modal H100 used for some evals (anchor std s7, anchor s42 sh2).",
+      "Delta GH200 used for the rest."
+    ]
+  },
+  "configs": {
+    "anc_v7kl01_10k": {
+      "label": "Anchor-Align (v7+KL=0.1)",
+      "description": "v7 alignment (aw=0.02, threshold=0.15) + KL distillation (kw=0.1) on libero_spatial. Headline method.",
+      "checkpoint_path": "Dwipz/Anchor-Align/libero-spatial",
+      "modal_volume_path": "/checkpoints/anchor_v7kl01_10k",
+      "wandb_run_id": "(internal)",
+      "training": {
+        "dataset": "libero_spatial_no_noops",
+        "max_steps": 10000,
+        "batch_size": 32,
+        "learning_rate": 0.0002,
+        "lora_rank": 64,
+        "image_aug": true,
+        "kl_loss_weight": 0.1,
+        "kl_layers": "all",
+        "kl_sigma": 1.0,
+        "use_alignment": true,
+        "align_version": 7,
+        "align_weight": 0.02,
+        "align_dir_l2_threshold": 0.15
+      },
+      "results": {
+        "spatial_std": {
+          "per_seed": {
+            "21": {
+              "successes": 488,
+              "episodes": 500,
+              "sr_pct": 97.6,
+              "log": "experiments/logs/3seed/spatial_std/anc_v7kl01_10k_seed21--20260507_032355.log"
+            },
+            "42": {
+              "successes": 492,
+              "episodes": 500,
+              "sr_pct": 98.4,
+              "log": "experiments/logs/3seed/spatial_std/anc_v7kl01_10k_seed42--20260506_182450.log"
+            },
+            "7": {
+              "successes": 488,
+              "episodes": 500,
+              "sr_pct": 97.6,
+              "log": "experiments/logs/3seed/spatial_std/anc_v7kl01_10k_seed7--20260507_030653.log"
+            }
+          },
+          "aggregate": {
+            "mean_sr_pct": 97.86666666666666,
+            "stderr_pp": 0.2666666666666705,
+            "n_seeds": 3,
+            "seeds": [
+              7,
+              21,
+              42
+            ]
+          }
+        },
+        "libero_pro": {
+          "lan": {
+            "per_seed": {
+              "21": {
+                "successes": 488,
+                "episodes": 500,
+                "sr_pct": 97.6,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_lan_seed21--20260506_175912.log"
+              },
+              "42": {
+                "successes": 483,
+                "episodes": 500,
+                "sr_pct": 96.6,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_lan_seed42--20260506_183625.log"
+              },
+              "7": {
+                "successes": 484,
+                "episodes": 500,
+                "sr_pct": 96.8,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_lan_seed7--20260507_151431.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 97.0,
+              "stderr_pp": 0.30550504633038905,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          },
+          "object": {
+            "per_seed": {
+              "21": {
+                "successes": 481,
+                "episodes": 500,
+                "sr_pct": 96.2,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_object_seed21--20260506_180446.log"
+              },
+              "42": {
+                "successes": 483,
+                "episodes": 500,
+                "sr_pct": 96.6,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_object_seed42--20260506_184552.log"
+              },
+              "7": {
+                "successes": 477,
+                "episodes": 500,
+                "sr_pct": 95.39999999999999,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_object_seed7--20260506_173608.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 96.06666666666666,
+              "stderr_pp": 0.35276684147528015,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          },
+          "swap": {
+            "per_seed": {
+              "21": {
+                "successes": 112,
+                "episodes": 500,
+                "sr_pct": 22.400000000000002,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_swap_seed21--20260506_181550.log"
+              },
+              "42": {
+                "successes": 111,
+                "episodes": 500,
+                "sr_pct": 22.2,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_swap_seed42--20260506_185829.log"
+              },
+              "7": {
+                "successes": 115,
+                "episodes": 500,
+                "sr_pct": 23.0,
+                "log": "experiments/logs/3seed/libero_pro/anc_v7kl01_10k_swap_seed7--20260506_173659.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 22.533333333333335,
+              "stderr_pp": 0.2403700850309326,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          }
+        },
+        "libero_plus": {
+          "per_seed": {
+            "7": {
+              "successes": 2175,
+              "episodes": 2402,
+              "sr_pct": 90.54954204829309,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "0": {
+                  "successes": 459,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_06-22_53_48--3seed_anc_v7kl01_10k_seed7_shard0_results.json"
+                },
+                "1": {
+                  "successes": 560,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_06-23_31_23--3seed_anc_v7kl01_10k_seed7_shard1_results.json"
+                },
+                "2": {
+                  "successes": 566,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_06-23_31_23--3seed_anc_v7kl01_10k_seed7_shard2_results.json"
+                },
+                "3": {
+                  "successes": 590,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-00_11_29--3seed_anc_v7kl01_10k_seed7_shard3_results.json"
+                }
+              }
+            },
+            "21": {
+              "successes": 2170,
+              "episodes": 2402,
+              "sr_pct": 90.3413821815154,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "0": {
+                  "successes": 459,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-00_24_10--3seed_anc_v7kl01_10k_seed21_shard0_results.json"
+                },
+                "1": {
+                  "successes": 557,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-00_46_42--3seed_anc_v7kl01_10k_seed21_shard1_results.json"
+                },
+                "2": {
+                  "successes": 569,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-00_56_28--3seed_anc_v7kl01_10k_seed21_shard2_results.json"
+                },
+                "3": {
+                  "successes": 585,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-00_59_40--3seed_anc_v7kl01_10k_seed21_shard3_results.json"
+                }
+              }
+            },
+            "42": {
+              "successes": 2163,
+              "episodes": 2403,
+              "sr_pct": 90.01248439450687,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "0": {
+                  "successes": 458,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-01_06_08--3seed_anc_v7kl01_10k_seed42_shard0_results.json"
+                },
+                "1": {
+                  "successes": 550,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-01_29_19--3seed_anc_v7kl01_10k_seed42_shard1_results.json"
+                },
+                "3": {
+                  "successes": 591,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-01_41_08--3seed_anc_v7kl01_10k_seed42_shard3_results.json"
+                },
+                "2": {
+                  "successes": 564,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_08-09_49_42--3seed_anc_v7kl01_10k_seed42_shard2_results.json"
+                }
+              }
+            }
+          },
+          "aggregate": {
+            "mean_sr_pct": 90.30113620810512,
+            "stderr_pp": 0.15633568013987903,
+            "n_seeds": 3,
+            "seeds": [
+              7,
+              21,
+              42
+            ]
+          }
+        }
+      }
+    },
+    "bl_action_10k": {
+      "label": "Action-only baseline",
+      "description": "Pure L1-regression action head SFT \u2014 no KL distillation, no alignment. Run 2 (post torch.manual_seed pre-LoRA fix).",
+      "checkpoint_path": "(internal, not released) baseline-spatial-10k--20260227_042158--10000_chkpt",
+      "modal_volume_path": "/checkpoints/baseline_action_10k",
+      "wandb_run_id": "bsb4fnzu",
+      "training": {
+        "dataset": "libero_spatial_no_noops",
+        "max_steps": 10000,
+        "batch_size": 32,
+        "learning_rate": 0.0002,
+        "lora_rank": 64,
+        "image_aug": true,
+        "kl_loss_weight": 0,
+        "use_alignment": false
+      },
+      "results": {
+        "spatial_std": {
+          "per_seed": {
+            "21": {
+              "successes": 469,
+              "episodes": 500,
+              "sr_pct": 93.8,
+              "log": "experiments/logs/3seed/spatial_std/bl_action_10k_seed21--20260507_032706.log"
+            },
+            "42": {
+              "successes": 465,
+              "episodes": 500,
+              "sr_pct": 93.0,
+              "log": "experiments/logs/3seed/spatial_std/bl_action_10k_seed42--20260506_195520.log"
+            },
+            "7": {
+              "successes": 465,
+              "episodes": 500,
+              "sr_pct": 93.0,
+              "log": "experiments/logs/3seed/spatial_std/bl_action_10k_seed7--20260506_185938.log"
+            }
+          },
+          "aggregate": {
+            "mean_sr_pct": 93.26666666666667,
+            "stderr_pp": 0.2666666666666657,
+            "n_seeds": 3,
+            "seeds": [
+              7,
+              21,
+              42
+            ]
+          }
+        },
+        "libero_pro": {
+          "lan": {
+            "per_seed": {
+              "21": {
+                "successes": 461,
+                "episodes": 500,
+                "sr_pct": 92.2,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_lan_seed21--20260506_192947.log"
+              },
+              "42": {
+                "successes": 468,
+                "episodes": 500,
+                "sr_pct": 93.60000000000001,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_lan_seed42--20260506_200949.log"
+              },
+              "7": {
+                "successes": 466,
+                "episodes": 500,
+                "sr_pct": 93.2,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_lan_seed7--20260506_190437.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 93.0,
+              "stderr_pp": 0.4163331998932279,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          },
+          "object": {
+            "per_seed": {
+              "21": {
+                "successes": 471,
+                "episodes": 500,
+                "sr_pct": 94.19999999999999,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_object_seed21--20260506_194455.log"
+              },
+              "42": {
+                "successes": 472,
+                "episodes": 500,
+                "sr_pct": 94.39999999999999,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_object_seed42--20260507_032707.log"
+              },
+              "7": {
+                "successes": 465,
+                "episodes": 500,
+                "sr_pct": 93.0,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_object_seed7--20260506_191118.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 93.86666666666666,
+              "stderr_pp": 0.4371625682867969,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          },
+          "swap": {
+            "per_seed": {
+              "21": {
+                "successes": 10,
+                "episodes": 500,
+                "sr_pct": 2.0,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_swap_seed21--20260506_194851.log"
+              },
+              "42": {
+                "successes": 11,
+                "episodes": 500,
+                "sr_pct": 2.1999999999999997,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_swap_seed42--20260506_201916.log"
+              },
+              "7": {
+                "successes": 13,
+                "episodes": 500,
+                "sr_pct": 2.6,
+                "log": "experiments/logs/3seed/libero_pro/bl_action_10k_swap_seed7--20260506_191943.log"
+              }
+            },
+            "aggregate": {
+              "mean_sr_pct": 2.2666666666666666,
+              "stderr_pp": 0.1763834207376394,
+              "n_seeds": 3,
+              "seeds": [
+                7,
+                21,
+                42
+              ]
+            }
+          }
+        },
+        "libero_plus": {
+          "per_seed": {
+            "7": {
+              "successes": 2048,
+              "episodes": 2402,
+              "sr_pct": 85.26228143213989,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "0": {
+                  "successes": 412,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-01_41_08--3seed_bl_action_10k_seed7_shard0_results.json"
+                },
+                "1": {
+                  "successes": 540,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-01_41_25--3seed_bl_action_10k_seed7_shard1_results.json"
+                },
+                "2": {
+                  "successes": 541,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_04_49--3seed_bl_action_10k_seed7_shard2_results.json"
+                },
+                "3": {
+                  "successes": 555,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_18_10--3seed_bl_action_10k_seed7_shard3_results.json"
+                }
+              }
+            },
+            "21": {
+              "successes": 2075,
+              "episodes": 2402,
+              "sr_pct": 86.38634471273939,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "0": {
+                  "successes": 426,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_15_59--3seed_bl_action_10k_seed21_shard0_results.json"
+                },
+                "1": {
+                  "successes": 546,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_35_01--3seed_bl_action_10k_seed21_shard1_results.json"
+                },
+                "2": {
+                  "successes": 547,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_35_01--3seed_bl_action_10k_seed21_shard2_results.json"
+                },
+                "3": {
+                  "successes": 556,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_35_01--3seed_bl_action_10k_seed21_shard3_results.json"
+                }
+              }
+            },
+            "42": {
+              "successes": 2068,
+              "episodes": 2402,
+              "sr_pct": 86.09492089925062,
+              "shards_complete": 4,
+              "shards_expected": 4,
+              "shard_breakdown": {
+                "1": {
+                  "successes": 544,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_36_50--3seed_bl_action_10k_seed42_shard1_results.json"
+                },
+                "0": {
+                  "successes": 415,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_39_37--3seed_bl_action_10k_seed42_shard0_results.json"
+                },
+                "3": {
+                  "successes": 559,
+                  "episodes": 601,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_44_35--3seed_bl_action_10k_seed42_shard3_results.json"
+                },
+                "2": {
+                  "successes": 550,
+                  "episodes": 600,
+                  "result_json": "experiments/logs/libero_plus/EVAL-libero_plus_batched-libero_spatial-openvla-2026_05_07-02_44_36--3seed_bl_action_10k_seed42_shard2_results.json"
+                }
+              }
+            }
+          },
+          "aggregate": {
+            "mean_sr_pct": 85.91451568137663,
+            "stderr_pp": 0.3367932583822256,
+            "n_seeds": 3,
+            "seeds": [
+              7,
+              21,
+              42
+            ]
+          }
+        }
+      }
+    }
+  }
+}
