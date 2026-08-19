@@ -100,15 +100,18 @@ def _resolve_pretrained_checkpoint(pretrained_checkpoint: str) -> str:
                 f"nor a resolvable HF Hub repo id."
             )
         local_dir = snapshot_download(repo_id=repo_id)
-        # Sanity-check: repos with multiple subfolders don't have config.json at root.
-        if not os.path.isfile(os.path.join(local_dir, "config.json")):
+        # Sanity-check: multi-checkpoint repos keep their weights in subfolders.
+        # Don't key on config.json — Dwipz/Anchor-Align has a stub config.json at
+        # root purely so the Hub's download counter works.
+        weight_markers = ("model.safetensors", "model.safetensors.index.json", "pytorch_model.bin")
+        if not any(os.path.isfile(os.path.join(local_dir, f)) for f in weight_markers):
             subs = sorted(
                 d for d in os.listdir(local_dir)
                 if os.path.isdir(os.path.join(local_dir, d)) and not d.startswith(".")
             )
             hint = ", ".join(f"{repo_id}/{s}" for s in subs) if subs else "(no subfolders found)"
             raise ValueError(
-                f"HF repo '{repo_id}' has no config.json at its root. "
+                f"HF repo '{repo_id}' has no model weights at its root. "
                 f"Please pass a subfolder path instead, e.g. one of: {hint}"
             )
         _RESOLVE_CACHE[pretrained_checkpoint] = local_dir
@@ -125,7 +128,9 @@ def _resolve_pretrained_checkpoint(pretrained_checkpoint: str) -> str:
             )
         local_root = snapshot_download(
             repo_id=repo_id,
-            allow_patterns=[f"{subfolder}/**"],
+            # Root config.json is included so the Hub's download counter registers
+            # this snapshot (it only counts requests to root-level query files).
+            allow_patterns=["config.json", f"{subfolder}/**"],
         )
         local_dir = os.path.join(local_root, subfolder)
         if not os.path.isdir(local_dir):
