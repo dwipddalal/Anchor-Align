@@ -254,7 +254,7 @@ from huggingface_hub import snapshot_download
 # Grab a single checkpoint into a local directory
 local_dir = snapshot_download(
     repo_id="Dwipz/Anchor-Align",
-    allow_patterns="libero-spatial/*",   # or libero-object/*, libero-goal/*, libero-long/*
+    allow_patterns=["config.json", "libero-spatial/*"],   # or libero-object/*, libero-goal/*, libero-long/*
     local_dir="./checkpoints",
 )
 print("Downloaded to:", local_dir)

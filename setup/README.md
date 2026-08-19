@@ -40,7 +40,7 @@ python -c "
 from huggingface_hub import snapshot_download
 snapshot_download(
     repo_id='Dwipz/Anchor-Align',
-    allow_patterns='libero-spatial/*',
+    allow_patterns=['config.json', 'libero-spatial/*'],
     local_dir='./checkpoints',
 )
 "

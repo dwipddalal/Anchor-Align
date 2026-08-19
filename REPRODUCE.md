@@ -78,7 +78,7 @@ python -c "
 from huggingface_hub import snapshot_download
 snapshot_download(
     repo_id='Dwipz/Anchor-Align',
-    allow_patterns='libero-spatial/*',
+    allow_patterns=['config.json', 'libero-spatial/*'],
     local_dir='./checkpoints',
 )
 "
@@ -131,7 +131,7 @@ Edit `SEEDS=(21)` to `SEEDS=(7 21 42)` in `submit_all.sh` first to run all three
 **Command:**
 
 ```bash
-python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns='libero-object/*', local_dir='./checkpoints')"
+python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns=['config.json', 'libero-object/*'], local_dir='./checkpoints')"
 
 # PRO lan
 CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero_pro/run_libero_pro_eval.py \
@@ -165,7 +165,7 @@ python scripts/verify_reproduction.py \
 **Command:**
 
 ```bash
-python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns='libero-goal/*', local_dir='./checkpoints')"
+python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns=['config.json', 'libero-goal/*'], local_dir='./checkpoints')"
 
 CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval_batched.py \
   --pretrained_checkpoint ./checkpoints/libero-goal \
@@ -198,7 +198,7 @@ python scripts/verify_reproduction.py \
 **Command:**
 
 ```bash
-python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns='libero-long/*', local_dir='./checkpoints')"
+python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='Dwipz/Anchor-Align', allow_patterns=['config.json', 'libero-long/*'], local_dir='./checkpoints')"
 
 CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval_batched.py \
   --pretrained_checkpoint ./checkpoints/libero-long \
