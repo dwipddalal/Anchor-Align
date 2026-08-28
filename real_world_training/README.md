@@ -160,10 +160,3 @@ Run the MSE/alignment preflight after generation; it verifies that the cache is
 non-empty and that every entry has `(frames, 3)` shape. Dataset loading reports
 the number of fingerprints matched to trajectories. Do not start a full run if
 that report is less than the dataset episode count.
-
-## GitHub publishing notes
-
-The `.gitignore` excludes datasets, weights, caches, logs, and checkpoints. No
-credentials are embedded in the launcher or configs. Before publishing, review
-`SOURCE_PROVENANCE.md`, retain `LICENSE`, and run a secret scanner against the
-staged commit.
