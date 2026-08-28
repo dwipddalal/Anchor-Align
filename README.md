@@ -351,8 +351,7 @@ sudo apt-get install libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev libglew-
 │       ├── libero_goal_no_noops/1.0.0/
 │       └── libero_10_no_noops/1.0.0/
 └── pretrained_models
-    ├── configs/
-    └── prism-qwen25-extra-dinosiglip-224px-0_5b/
+    └── prism-qwen25-extra-dinosiglip-224px-0_5b/  # optional local download
 ```
 
 ### VLM backbone (optional, not needed for inference)
@@ -378,7 +377,10 @@ snapshot_download(
 "
 ```
 
-The backbone is ~2.5 GB. `pretrained_models/configs/` is already in the repo and doesn't need to be downloaded.
+The backbone is ~2.5 GB. Its model configuration and tokenizer are supplied by
+the Hugging Face checkpoint rather than duplicated in this repository. The
+LoRA merge utility likewise reads the policy configuration from the fine-tuned
+checkpoint directory.
 
 ---
 
@@ -457,7 +459,7 @@ Each episode is segmented into four short windows corresponding to distinct beha
 | `real_world_training/` | Self-contained StarVLA training bundle for the real-world xArm7 green-mug task |
 | `prismatic/` | Model and data library (VLM backbone, action heads, RLDS pipeline) |
 | `experiments/robot/` | LIBERO / LIBERO-PRO / LIBERO-Plus evaluation scripts |
-| `pretrained_models/` | Backbone configs and tokenizer files (weights are downloaded separately) |
+| `pretrained_models/` | Optional local download area for the base VLM (artifacts live on Hugging Face) |
 | `scripts/` | Language-head diagnostic utility |
 | `slurm/` | SLURM templates for CALVIN evaluation |
 | `assets/` | Figures used in this README |

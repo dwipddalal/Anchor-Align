@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#SBATCH --account=YOUR_ACCOUNT
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
@@ -12,6 +11,7 @@
 #SBATCH -e slurm-logs/slurm-%x-%j.err
 
 # CALVIN-ABC evaluation runner.
+# Resource requests below are examples; adjust them for the target cluster.
 #
 # Usage:
 #   sbatch --export=ALL,CHECKPOINT=<path>,RUN_NOTE=<note> slurm/slurm_calvin_eval.slurm
@@ -34,7 +34,7 @@
 # Output directory: experiments/logs/calvin/<RUN_NOTE>/
 #
 # Notes:
-# - Uses the `calvin` conda env (created via CALVIN/scripts/setup_env.sh).
+# - Uses CONDA_ENV (default: `vla-adapter-pt27`; see setup/envs/).
 # - PYTHONPATH includes the repo root so the calvin env can import the local prismatic package.
 # - CALVIN_ROOT="calvin" is the symlink at the repo root (-> CALVIN/calvin).
 

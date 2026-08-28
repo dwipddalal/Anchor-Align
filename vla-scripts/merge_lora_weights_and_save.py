@@ -23,7 +23,7 @@ from transformers import AutoConfig, AutoImageProcessor, AutoModelForVision2Seq,
 from prismatic.extern.hf.configuration_prismatic import OpenVLAConfig
 from prismatic.extern.hf.modeling_prismatic import OpenVLAForActionPrediction
 from prismatic.extern.hf.processing_prismatic import PrismaticImageProcessor, PrismaticProcessor
-from prismatic.models import load, load_vla
+from prismatic.models import load
 
 
 
@@ -55,7 +55,13 @@ def main(cfg: ConvertConfig) -> None:
             hf_token=hf_token,
             load_for_training=True,
             )
-        config = AutoConfig.from_pretrained("pretrained_models/configs/config.json")
+        # The fine-tuned checkpoint owns the exact architecture and normalization
+        # metadata needed for the merged model. Loading it here avoids maintaining
+        # a second, easily stale config/tokenizer export in this repository.
+        config = AutoConfig.from_pretrained(
+            cfg.lora_finetuned_checkpoint_dir,
+            trust_remote_code=False,
+        )
         vla = AutoModelForVision2Seq.from_config(config, torch_dtype=torch.bfloat16)
         # for name, param in model.named_parameters():
         #     print(f"{name}: {param.shape}")

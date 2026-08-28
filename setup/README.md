@@ -7,25 +7,37 @@ This directory contains helpers for setting up the repo on a fresh machine.
 - [`install_libero_variants.sh`](install_libero_variants.sh) — clone + pip-install one of the three LIBERO variants (Standard / PRO / Plus)
 - [`envs/`](envs/) — conda environment snapshots (`vla-adapter-*-requirements.txt`) for exact-version reproduction
 
-## Running SLURM jobs on your own cluster
+## Adapting the SLURM examples
 
-All SLURM templates in `slurm/` are **parameterized via env vars** so they run on any cluster without editing. Set these once per session before submitting jobs:
+The CALVIN files in `slurm/` are starting points, not drop-in jobs for every
+cluster. They contain no credentials, private filesystem paths, account, or
+partition. Runtime paths are supplied through environment variables, while
+resource and time requests should be reviewed for your scheduler.
+
+Set the required runtime paths before submitting:
 
 ```bash
-export REPO_DIR="$(pwd)"                            # required — path to this repo
-export HF_HOME="$HOME/.cache/huggingface"           # optional — HF cache root
-export CONDA_SH="$HOME/miniconda3/etc/profile.d/conda.sh"  # required — conda activation script for your cluster
-# Optional site-specific CUDA configuration:
-export CUDA_COMPAT_MODULE="cuda-compat/12.8"
-export CUPTI_LIB_DIR="/path/to/cuda/extras/CUPTI/lib64"
+export REPO_DIR="$(pwd)"                 # required — path to this repo
+export CONDA_SH="/path/to/conda.sh"       # required — conda activation script
+# export HF_HOME="/path/to/hf-cache"      # optional — Hugging Face cache root
+# export CUDA_COMPAT_MODULE="module-name" # optional — site-specific module
+# export CUPTI_LIB_DIR="/path/to/CUPTI/lib64" # optional — site-specific library path
 ```
 
 Any variable marked "required" will cause the SLURM script to bail out with a
 clear error if unset — no silent failures on someone else's cluster.
 
-The templates retain an `#SBATCH --account=YOUR_ACCOUNT` placeholder and do
-not hard-code a partition. Pass both values for your cluster with
-`sbatch -A <account> -p <partition> <script>`, or edit the account placeholder.
+The examples do not choose an account or partition. If your cluster requires
+them, pass them at submission time:
+
+```bash
+sbatch -A <account> -p <partition> <script>
+```
+
+The checked-in CPU, memory, GPU, and wall-time requests are example values and
+can also be overridden or edited for the target cluster. Separately,
+`setup_pt27_env.sh` targets PyTorch 2.7 with CUDA 12.8 on aarch64/GH200; adapt
+its package versions for other architectures or CUDA installations.
 
 ## Run a one-shot evaluation
 

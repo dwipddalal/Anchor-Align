@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#SBATCH --account=YOUR_ACCOUNT
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
@@ -12,17 +11,13 @@
 #SBATCH -e slurm-logs/slurm-%x-%j.err
 
 # CALVIN-ABC batched eval (single-GPU, B parallel CalvinEnv subprocesses).
+# Resource requests below are examples; adjust them for the target cluster and batch size.
 #
 # Usage:
 #   sbatch --export=ALL,CHECKPOINT=<path>,RUN_NOTE=<note>[,BATCH=8] slurm/slurm_calvin_eval_batched.slurm
 #
-# Resource sizing (GH200, B parallel envs share node):
-#   --cpus-per-task=24  -> ~3 cpus per env worker (B=8) for PyBullet
-#   --mem=64g           -> ~8g/env actual; 64g for proc workers + model + sim
-#   --gpus-per-node=1   -> 1 GH200 (model is small enough for B=8 batched fwd)
-#
-# This is the PRODUCTION batched eval. Not parallel evals across nodes — that
-# would be wasteful for 0.5B model. Single GPU + B=8 envs is the right shape.
+# One GPU serves the model while B environment subprocesses run on the same
+# node. CPU and memory needs therefore scale with B.
 
 set -euo pipefail
 
