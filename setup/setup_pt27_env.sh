@@ -3,12 +3,12 @@
 # PyTorch 2.7 + Triton 3.3+ on GH200 (aarch64) with cuda-compat/12.8
 #
 # Usage: Run on a compute node (interactive or SLURM) with GPU access:
-#   srun --account=YOUR_ACCOUNT -p YOUR_PARTITION -N 1 --gpus-per-node=1 --cpus-per-task=12 --mem=32g -t 01:00:00 --pty bash
+#   srun --account=<account> -p <partition> -N 1 --gpus-per-node=1 --cpus-per-task=12 --mem=32g -t 01:00:00 --pty bash
 #   bash setup_pt27_env.sh
 
 set -euo pipefail
 
-CONDA_SH="${CONDA_SH:-/path/to/conda.sh}"
+CONDA_SH="${CONDA_SH:?Set CONDA_SH to the conda.sh path for your installation}"
 CONDA_ENV="${CONDA_ENV:-vla-adapter-pt27}"
 REPO_DIR="${REPO_DIR:-$(pwd)}"
 
@@ -17,10 +17,13 @@ echo "  Setting up ${CONDA_ENV}"
 echo "============================================"
 echo ""
 
-# Load cuda-compat for driver forward compatibility
-module load cuda-compat/12.8
-export LD_LIBRARY_PATH=/path/to/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH}
-echo "cuda-compat/12.8 + CUPTI 12.6 loaded"
+# Optionally load site-specific CUDA compatibility and CUPTI paths.
+if [ -n "${CUDA_COMPAT_MODULE:-}" ]; then
+    module load "$CUDA_COMPAT_MODULE"
+fi
+if [ -n "${CUPTI_LIB_DIR:-}" ]; then
+    export LD_LIBRARY_PATH="${CUPTI_LIB_DIR}:${LD_LIBRARY_PATH:-}"
+fi
 
 # Step 1: Create conda environment
 echo ""

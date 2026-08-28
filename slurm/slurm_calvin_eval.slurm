@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #SBATCH --account=YOUR_ACCOUNT
-#SBATCH -p YOUR_PARTITION
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
@@ -21,11 +20,16 @@
 #   CHECKPOINT  -- path to the *_chkpt directory produced by training.
 #                  Must contain config.json, model.safetensors, action_head--*_checkpoint.pt,
 #                  proprio_projector--*_checkpoint.pt, lora_adapter/.
+#   CONDA_SH    -- path to conda.sh for your installation.
 #
 # Optional env vars:
 #   RUN_NOTE       -- appended to log dir name; default = basename of CHECKPOINT
 #   CALVIN_PATH    -- override the calvin repo path (default = "calvin" symlink at repo root)
 #   USE_WANDB      -- "True" to push results to wandb (default False — local logs only)
+#   CUDA_COMPAT_MODULE -- optional environment-module name to load before evaluation
+#   CUPTI_LIB_DIR  -- optional CUPTI library directory to prepend to LD_LIBRARY_PATH
+#   WANDB_ENTITY   -- required only when USE_WANDB=True
+#   WANDB_PROJECT  -- project name; defaults to anchor-align-calvin-eval
 #
 # Output directory: experiments/logs/calvin/<RUN_NOTE>/
 #
@@ -36,7 +40,7 @@
 
 set -euo pipefail
 
-CONDA_SH="${CONDA_SH:-/path/to/conda.sh}"
+CONDA_SH="${CONDA_SH:?Set CONDA_SH to the conda.sh path for your installation}"
 CONDA_ENV="${CONDA_ENV:-vla-adapter-pt27}"  # torch 2.7 + calvin pkgs (see setup/envs/)
 REPO_DIR="${REPO_DIR:?REPO_DIR must be set to the Anchor-Align repo root}"
 
@@ -64,8 +68,12 @@ echo "  OUTPUT_DIR     : $OUTPUT_DIR"
 echo "  Job: ${SLURM_JOB_NAME:-} (ID: ${SLURM_JOB_ID:-unknown}) on $(hostname)"
 echo "================================================================"
 
-module load cuda-compat/12.8 || true
-export LD_LIBRARY_PATH=/path/to/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH:-}
+if [ -n "${CUDA_COMPAT_MODULE:-}" ]; then
+    module load "$CUDA_COMPAT_MODULE"
+fi
+if [ -n "${CUPTI_LIB_DIR:-}" ]; then
+    export LD_LIBRARY_PATH="${CUPTI_LIB_DIR}:${LD_LIBRARY_PATH:-}"
+fi
 
 source "$CONDA_SH"
 conda activate "$CONDA_ENV"
@@ -84,9 +92,13 @@ export CALVIN_ROOT="${REPO_DIR}/calvin"
 # already handles EGL device selection; we just make sure no DISPLAY is set.
 unset DISPLAY
 
-# Wandb config (only used when USE_WANDB=True)
-export WANDB_ENTITY="YOUR_WANDB_ENTITY"
-export WANDB_PROJECT="vla-adapter-calvin-eval"
+# Authenticate with `wandb login` or your scheduler's secret injection; never
+# store credentials in this file.
+WANDB_ENTITY="${WANDB_ENTITY:-}"
+WANDB_PROJECT="${WANDB_PROJECT:-anchor-align-calvin-eval}"
+if [ "$USE_WANDB" = "True" ]; then
+    : "${WANDB_ENTITY:?Set WANDB_ENTITY before enabling W&B}"
+fi
 
 cd "$REPO_DIR"
 
@@ -108,7 +120,7 @@ python vla-scripts/evaluate_calvin.py \
   --num_images_in_input 2 \
   --use_proprio True \
   --num_open_loop_steps 8 \
-  --use_wandb $USE_WANDB \
+  --use_wandb "$USE_WANDB" \
   --wandb_entity "$WANDB_ENTITY" \
   --wandb_project "$WANDB_PROJECT" \
   --run_id_note "$RUN_NOTE" \

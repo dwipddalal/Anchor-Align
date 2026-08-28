@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #SBATCH --account=YOUR_ACCOUNT
-#SBATCH -p YOUR_PARTITION
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
@@ -27,7 +26,7 @@
 
 set -euo pipefail
 
-CONDA_SH="${CONDA_SH:-/path/to/conda.sh}"
+CONDA_SH="${CONDA_SH:?Set CONDA_SH to the conda.sh path for your installation}"
 CONDA_ENV="${CONDA_ENV:-vla-adapter-pt27}"
 REPO_DIR="${REPO_DIR:?REPO_DIR must be set to the Anchor-Align repo root}"
 
@@ -49,8 +48,12 @@ echo "  OUTPUT_DIR : $OUTPUT_DIR"
 echo "  Job: ${SLURM_JOB_NAME:-} (ID: ${SLURM_JOB_ID:-?}) on $(hostname)"
 echo "================================================================"
 
-module load cuda-compat/12.8 || true
-export LD_LIBRARY_PATH=/path/to/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH:-}
+if [ -n "${CUDA_COMPAT_MODULE:-}" ]; then
+    module load "$CUDA_COMPAT_MODULE"
+fi
+if [ -n "${CUPTI_LIB_DIR:-}" ]; then
+    export LD_LIBRARY_PATH="${CUPTI_LIB_DIR}:${LD_LIBRARY_PATH:-}"
+fi
 source "$CONDA_SH"
 conda activate "$CONDA_ENV"
 

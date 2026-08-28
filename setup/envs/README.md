@@ -1,6 +1,6 @@
 # Conda environment snapshots
 
-Frozen environment exports captured from the Delta GH200 host on which experiments were run. Use these on another server to reproduce the exact dependency set.
+Frozen environment exports captured from the GH200 host on which experiments were run. Use these on another server to reproduce the exact dependency set.
 
 ## Which env does what
 
