@@ -39,11 +39,14 @@ authors:
   - family-names: Mishra
     given-names: Utkarsh
     affiliation: Texas A&M University
-  - family-names: Baratian
-    given-names: Alex
-    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Song
+    given-names: Yuchen
+    affiliation: University of California, Irvine
   - family-names: Ha
     given-names: Hyeonjeong
+    affiliation: University of Illinois Urbana-Champaign
+  - family-names: Baratian
+    given-names: Alex
     affiliation: University of Illinois Urbana-Champaign
   - family-names: Ji
     given-names: Heng
@@ -75,10 +78,12 @@ preferred-citation:
       given-names: Jeonghwan
     - family-names: Mishra
       given-names: Utkarsh
-    - family-names: Baratian
-      given-names: Alex
+    - family-names: Song
+      given-names: Yuchen
     - family-names: Ha
       given-names: Hyeonjeong
+    - family-names: Baratian
+      given-names: Alex
     - family-names: Ji
       given-names: Heng
     - family-names: Lazebnik

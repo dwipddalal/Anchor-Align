@@ -7,7 +7,7 @@
   <img src="assets/fig_method_overview.png" alt="Anchor-Align method overview" width="95%"/>
 </p>
 
-**TL;DR** — Standard behavior-cloning finetuning of a vision-language model on robot demos silently erases the pretrained VLM's semantics and decouples its language output from its actions. **Anchor-Align** adds two lightweight losses on top of action prediction that (i) *anchor* the trainable VLA to a frozen copy of the pretrained VLM (preserving vision-language reasoning) and (ii) *align* the pre-action hidden state with a discrete motion-direction label derived from the executed motion. The result: **22.6%** on LIBERO-PRO position swap (vs 2.3% for standard BC), **90.3%** LIBERO-Plus average (vs 85.1%), and near-doubled real-world success (**28.3% → 54.2%**) on a UFactory xArm7 setup.
+**TL;DR** — Standard behavior-cloning finetuning of a vision-language model on robot demos silently erases the pretrained VLM's semantics and decouples its language output from its actions. **Anchor-Align** adds two lightweight losses on top of action prediction that (i) *anchor* the trainable VLA to a frozen copy of the pretrained VLM (preserving vision-language reasoning) and (ii) *align* the pre-action hidden state with a discrete motion-direction label derived from the executed motion. The result: **22.6%** on LIBERO-PRO position swap (vs 2.3% for standard BC), **90.3%** LIBERO-Plus average (vs 85.1%), and consistent real-world gains over standard BC across eight manipulation settings on a single-arm UFactory xArm7 and a bimanual YAM robot.
 
 ---
 
@@ -494,7 +494,7 @@ This codebase builds on [VLA-Adapter](https://github.com/OpenHelix-Team/VLA-Adap
 ```bibtex
 @article{dalal2026anchoralign,
   title   = {Generalizable VLA Finetuning via Representation Anchoring and Language-Action Alignment},
-  author  = {Dalal, Dwip and Patel, Shivansh and Jain, Chahit and Kim, Jeonghwan and Mishra, Utkarsh and Baratian, Alex and Ha, Hyeonjeong and Ji, Heng and Lazebnik, Svetlana and Jain, Unnat},
+  author  = {Dalal, Dwip and Patel, Shivansh and Jain, Chahit and Kim, Jeonghwan and Mishra, Utkarsh and Song, Yuchen and Ha, Hyeonjeong and Baratian, Alex and Ji, Heng and Lazebnik, Svetlana and Jain, Unnat},
   journal = {arXiv preprint arXiv:2607.13429},
   year    = {2026}
 }
