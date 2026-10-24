@@ -7,7 +7,7 @@
   <img src="assets/fig_method_overview.png" alt="Anchor-Align method overview" width="95%"/>
 </p>
 
-**TL;DR** — Standard behavior-cloning finetuning of a vision-language model on robot demos silently erases the pretrained VLM's semantics and decouples its language output from its actions. **Anchor-Align** adds two lightweight losses on top of action prediction that (i) *anchor* the trainable VLA to a frozen copy of the pretrained VLM (preserving vision-language reasoning) and (ii) *align* the pre-action hidden state with a discrete motion-direction label derived from the executed motion. The result: **22.6%** on LIBERO-PRO position swap (vs 2.3% for standard BC), **90.3%** LIBERO-Plus average (vs 85.1%), and consistent real-world gains over standard BC across eight manipulation settings on a single-arm UFactory xArm7 and a bimanual YAM robot.
+**TL;DR** — Standard behavior-cloning finetuning of a vision-language model on robot demos silently erases the pretrained VLM's semantics ([catastrophic forgetting](https://anchoralignvla.github.io/#catastrophic-forgetting)) and decouples its language output from its actions. **Anchor-Align** adds two lightweight losses on top of action prediction that (i) *anchor* the trainable VLA to a frozen copy of the pretrained VLM (preserving vision-language reasoning) and (ii) *align* the pre-action hidden state with a discrete motion-direction label derived from the executed motion. The result: **22.6%** on LIBERO-PRO position swap (vs 2.3% for standard BC), **90.3%** LIBERO-Plus average (vs 85.1%), and consistent real-world gains over standard BC across eight manipulation settings on a single-arm UFactory xArm7 and a bimanual YAM robot.
 
 ---
 
